@@ -4,31 +4,27 @@ namespace App\Services;
 
 use App\Repositories\TaskRepository;
 
-class TaskService{
+class TaskService extends BaseService {
 
     protected $taskRepository;
 
     public function __construct(TaskRepository $taskRepository)
     {
+        parent::__construct($taskRepository);
         $this->taskRepository=$taskRepository;
     }
-    public function all($pageSize=0){
-        return $this->taskRepository->all($pageSize);
+    public function addUserToTask($taskId,$userId){
+        return $this->taskRepository->addUserToTask($taskId,$userId);
     }
-    public function find($id){
-        return $this->taskRepository->find($id);
+    public function deleteUserFromTask($taskId,$userId){
+        return $this->taskRepository->deleteUserFromTask($taskId,$userId);
     }
-    public function save($request){
-        $attributes=$request->input();
-        $project=$this->taskRepository->create($attributes);
-        return $project;
+    /**
+     * Reorder tasks.
+     */
+    public function reorderTasks(array $taskOrder)
+    {
+        return $this->taskRepository->reorderTasks($taskOrder);
     }
-    public function update($request,$id){
-        $attributes=$request->input();
-        $project=$this->taskRepository->update($attributes,$id);
-        return $project;
-    }
-    public function delete($id){
-        return $this->taskRepository->delete($id);
-    }
+
 }

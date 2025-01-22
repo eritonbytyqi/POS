@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\EmptyResource;
 use App\Http\Resources\TaskCollection;
 use App\Http\Resources\TaskResource;
+use App\Http\Resources\TaskUserResource;
 use App\Models\Task;
 use App\Services\TaskService;
 use Illuminate\Http\Request;
@@ -50,6 +51,47 @@ class TaskController extends Controller
         try {
             $task=$this->taskService->save($request);
             return $this->created(new TaskResource($task));
+        }catch (Exception $e){
+            return $this->respondError('Something went wrong!',$e);
+        }
+    }
+
+    /**
+     * Add User to task .
+     */
+    public function addUserToTask(Request $request,$taskId)
+    {
+        try {
+            $userId=$request->input('user_id');
+            $task=$this->taskService->addUserToTask($taskId,$userId);
+            return $this->created(new TaskUserResource($task));
+        }catch (Exception $e){
+            return $this->respondError('Something went wrong!',$e);
+        }
+    }
+    /**
+     * Add User to task .
+     */
+    public function deleteUserFromTask(Request $request,$taskId)
+    {
+        try {
+            $userId=$request->input('user_id');
+            $task=$this->taskService->deleteUserFromTask($taskId,$userId);
+            return $this->created(new TaskUserResource($task));
+        }catch (Exception $e){
+            return $this->respondError('Something went wrong!',$e);
+        }
+    }
+
+    /**
+     * Reorder tasks in a task list.
+     */
+    public function reorderTasks(Request $request)
+    {
+        try {
+            $taskOrder = $request->input('task_order');
+            $tasks = $this->taskService->reorderTasks($taskOrder);
+            return $this->okWithCollection(new TaskCollection($tasks));
         }catch (Exception $e){
             return $this->respondError('Something went wrong!',$e);
         }

@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 
-class TaskResource extends AbstractJsonResource
+class TaskUserResource extends AbstractJsonResource
 {
     public function getModelName(){
         return "Task";
@@ -16,8 +16,7 @@ class TaskResource extends AbstractJsonResource
             'name'=>$this->name,
             'description'=>$this->description,
             'order'=>$this->order,
-            'priority'=>$this->priority,
-            'story_point'=>$this->story_point,
+            'user'=>$this->users
         ];
     }
 }

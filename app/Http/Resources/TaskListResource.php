@@ -14,7 +14,9 @@ class TaskListResource extends AbstractJsonResource
         return [
             'id'=>$this->id,
             'name'=>$this->name,
-            'description'=>$this->description
+            'description'=>$this->description,
+            'order'=>$this->order,
+            'color'=>$this->color
         ];
     }
 }

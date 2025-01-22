@@ -2,23 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\TaskListtRequest;
 use App\Http\Resources\EmptyResource;
-use App\Http\Resources\TaskListCollection;
-use App\Http\Resources\TaskListResource;
+use App\Http\Resources\UserCollection;
+use App\Http\Resources\UserResource;
 use App\Models\TaskList;
-use App\Services\TaskListService;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Exception;
 
-class TaskListController extends Controller
+class UserController extends Controller
 {
 
-    protected TaskListService $taskListService;
+    protected UserService $userService;
 
-    public function __construct(TaskListService $taskListService)
+    public function __construct(UserService $userService)
     {
-        $this->taskListService=$taskListService;
+        $this->userService=$userService;
     }
     /**
      * Display a listing of the resource.
@@ -26,11 +25,11 @@ class TaskListController extends Controller
     public function index()
     {
         try {
-            $taskLists=$this->taskListService->all();
-            if($taskLists->isEmpty()){
+            $users=$this->userService->all();
+            if($users->isEmpty()){
                 return $this->okNoRecords();
             }
-            return $this->okWithCollection(new TaskListCollection($taskLists));
+            return $this->okWithCollection(new UserCollection($users));
         }catch (Exception $e){
             return $this->respondError('Somthing went wrong' . $e);
         }
@@ -47,11 +46,11 @@ class TaskListController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(TaskListtRequest $request)
+    public function store(Request $request)
     {
         try {
-            $taskList=$this->taskListService->save($request);
-            return $this->created(new TaskListResource($taskList));
+            $user=$this->userService->create($request);
+            return $this->created(new UserResource($user));
         }catch (Exception $e){
             return $this->respondError('Something went wrong!',$e);
         }
@@ -63,9 +62,9 @@ class TaskListController extends Controller
     public function show($id)
     {
         try {
-            $taskList=$this->taskListService->find($id);
-            if($taskList){
-                return $this->okWithResource(new TaskListResource($taskList));
+            $user=$this->userService->find($id);
+            if($user){
+                return $this->okWithResource(new UserResource($user));
             }
             return $this->notFound();
         }catch (Exception $e){
@@ -87,10 +86,10 @@ class TaskListController extends Controller
     public function update(Request $request,$id)
     {
         try {
-            $taskList=$this->taskListService->find($id);
-            if($taskList){
-                $taskList=$this->taskListService->update($request,$id);
-                return $this->okWithResource(new TaskListResource($taskList));
+            $user=$this->userService->find($id);
+            if($user){
+                $user=$this->userService->update($request,$id);
+                return $this->okWithResource(new UserResource($user));
             }
             return $this->notFound();
         }catch (Exception $e){
@@ -104,26 +103,13 @@ class TaskListController extends Controller
     public function destroy($id)
     {
         try {
-            $taskList=$this->taskListService->find($id);
-            if($taskList){
-                $this->taskListService->delete($id);
+            $user=$this->userService->find($id);
+            if($user){
+                $this->userService->delete($id);
                 return $this->deleted(new EmptyResource());
             }
         }catch (Exception $e){
             return $this->respondError('Something went wrong!', $e);
-        }
-    }
-    /**
-     * Reorder tasks in a task list.
-     */
-    public function reorderTaskLists(Request $request)
-    {
-        try {
-            $taskListsOrder = $request->input('tasklists_order');
-            $taskLists = $this->taskListService->reorderTaskLists($taskListsOrder);
-            return $this->okWithCollection(new TaskListCollection($taskLists));
-        }catch (Exception $e){
-            return $this->respondError('Something went wrong!',$e);
         }
     }
 }

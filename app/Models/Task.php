@@ -9,9 +9,15 @@ class Task extends Model
     protected $fillable=[
         'task_list_id',
         'name',
-        'description'
+        'description',
+        'order',
+        'priority',
+        'story_point'
     ];
     public function taskloist(){
         return $this->belongsTo(TaskList::class);
+    }
+    public function users(){
+        return $this->belongsToMany(User::class);
     }
 }

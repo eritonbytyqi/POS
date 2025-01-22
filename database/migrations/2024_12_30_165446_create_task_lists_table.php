@@ -16,6 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('project_id');
             $table->string('name');
             $table->text('description');
+            $table->integer('order');
+            $table->string('color')->nullable();
             $table->timestamps();
         });
     }

@@ -4,31 +4,18 @@ namespace App\Services;
 
 use App\Repositories\TaskListRepository;
 
-class TaskListService{
+class TaskListService extends BaseService {
 
     protected $taskListRepository;
 
     public function __construct(TaskListRepository $taskListRepository)
     {
+        parent::__construct($taskListRepository);
         $this->taskListRepository=$taskListRepository;
     }
-    public function all($pageSize=0){
-        return $this->taskListRepository->all($pageSize);
+    public function reorderTaskLists(array $taskListsOrder)
+    {
+        return $this->taskListRepository->reorderTaskLists($taskListsOrder);
     }
-    public function find($id){
-        return $this->taskListRepository->find($id);
-    }
-    public function save($request){
-        $attributes=$request->input();
-        $project=$this->taskListRepository->create($attributes);
-        return $project;
-    }
-    public function update($request,$id){
-        $attributes=$request->input();
-        $project=$this->taskListRepository->update($attributes,$id);
-        return $project;
-    }
-    public function delete($id){
-        return $this->taskListRepository->delete($id);
-    }
+
 }

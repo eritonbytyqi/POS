@@ -9,7 +9,10 @@ class TaskList extends Model
     protected $fillable=[
         'project_id',
         'name',
-        'description'
+        'description',
+        'order',
+        'color'
+
     ];
     public function project(){
         return $this->belongsTo(Project::class);

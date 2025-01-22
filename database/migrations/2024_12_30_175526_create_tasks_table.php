@@ -16,6 +16,9 @@ return new class extends Migration
             $table->unsignedBigInteger('task_list_id');
             $table->string('name');
             $table->text('description');
+            $table->integer('order');
+            $table->enum('priority', ['low', 'medium', 'high','critical'])->default('medium');
+            $table->integer('story_point');
             $table->timestamps();
         });
     }

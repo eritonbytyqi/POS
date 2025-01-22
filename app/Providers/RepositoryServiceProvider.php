@@ -6,8 +6,10 @@ use App\Repositories\BaseRepository;
 use App\Repositories\IElequent\IBaseRepository;
 use App\Repositories\IElequent\IProjectRepository;
 use App\Repositories\IElequent\ITaskListRepository;
+use App\Repositories\IElequent\IUserRepository;
 use App\Repositories\ProjectRepository;
 use App\Repositories\TaskListRepository;
+use App\Repositories\UserRepository;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider{
@@ -17,6 +19,7 @@ class RepositoryServiceProvider extends ServiceProvider{
         $this->app->bind(IBaseRepository::class, BaseRepository::class);
         $this->app->bind(IProjectRepository::class, ProjectRepository::class);
         $this->app->bind(ITaskListRepository::class, TaskListRepository::class);
+        $this->app->bind(IUserRepository::class, UserRepository::class);
     }
     public function boot(){
 
