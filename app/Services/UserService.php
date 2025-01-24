@@ -24,4 +24,15 @@ class UserService extends BaseService {
         $attributes['password']=Hash::make($attributes['password']);
         return $this->update($request->merge($attributes),$id);
     }
+
+    public function getAllUsersIncludingDeleted()
+    {
+        return $this->userRepository->withTrashed()->get();
+    }
+    public function getDeletedUsers()
+    {
+        return $this->userRepository->onlyTrashed()->get();
+    }
+
+
 }

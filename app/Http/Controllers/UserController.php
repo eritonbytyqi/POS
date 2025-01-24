@@ -6,7 +6,10 @@ use App\Http\Resources\EmptyResource;
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
 use App\Models\TaskList;
+use App\Models\User;
 use App\Services\UserService;
+use Illuminate\Support\Facades\Log;
+
 use Illuminate\Http\Request;
 use Exception;
 
@@ -25,6 +28,7 @@ class UserController extends Controller
     public function index()
     {
         try {
+           
             $users=$this->userService->all();
             if($users->isEmpty()){
                 return $this->okNoRecords();
@@ -97,19 +101,79 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($id)
     {
         try {
             $user=$this->userService->find($id);
             if($user){
                 $this->userService->delete($id);
-                return $this->deleted(new EmptyResource());
+                return $this->deleted(new EmptyResource($user));
             }
         }catch (Exception $e){
             return $this->respondError('Something went wrong!', $e);
         }
     }
+
+
+public function getUsersDeleted()
+{
+    try {
+       
+        $deletedUsers = User::onlyTrashed()->get();
+
+        return response()->json($deletedUsers);
+    } catch (\Exception $e) {
+        return $this->respondError('Something went wrong!', $e);
+
+    }
 }
+
+    public function restoreDeletedUser($id)
+    {
+        try {
+         
+            $user = User::withTrashed()->find($id);
+    
+            if ($user) {
+                if ($user->trashed()) {
+                    $user->restore();
+    return response()->json([ 'message' => 'User restored successfully.',
+         'data' => new UserResource($user)
+                    ], 200);
+                } else {
+                    return response()->json([
+                        'message' => 'User is not deleted.'], 400); 
+                }
+            } else {
+                return response()->json([
+                    'message' => 'User not found.'], 404); 
+            }
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'Something went wrong.','error' => $e->getMessage()
+            ], 500); 
+        }
+    }
+
+    
+
+    public function forceDelete($id)
+{
+    try {
+        $user = User::withTrashed()->find($id);
+
+        if ($user) {
+            $user->forceDelete();
+            return $this->deleted(new EmptyResource( $user));
+
+        }
+
+    } catch (Exception $e) {
+        return $this->respondError('Something went wrong!', $e);
+
+
+    }
+}
+
+}
+

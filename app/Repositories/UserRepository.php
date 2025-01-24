@@ -11,5 +11,23 @@ class UserRepository extends BaseRepository implements IUserRepository
     {
         parent::__construct($model);
     }
+    public function withTrashed()
+    {
+        return User::withTrashed();
+    }
+    public function onlyTrashed()
+    {
+        return User::onlyTrashed();  
+    }
 
+    public function forceDelete($id)
+{
+    $user= $this->model->withTrashed()->find($id);
+
+    if ($user) {
+        $user->forceDelete();  
+    }
+
+    return $user;
+}
 }

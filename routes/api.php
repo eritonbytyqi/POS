@@ -16,3 +16,9 @@ Route::post('tasks/{taskId}/add-user',[TaskController::class,'addUserToTask']);
 Route::delete('tasks/{taskId}/delete-user',[TaskController::class,'deleteUserFromTask']);
 Route::apiResource('tasks',TaskController::class);
 Route::apiResource('users',UserController::class);
+// Route::middleware('auth:sanctum')->get('/users/deleted', [UserController::class, 'getDeletedUsers']);
+
+Route::post('users/{id}/restore', [UserController::class, 'restoreDeletedUser']);
+Route::delete('users/{id}/force-delete', [UserController::class, 'forceDelete']);
+
+
