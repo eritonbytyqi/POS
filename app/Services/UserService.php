@@ -1,38 +1,16 @@
 <?php
-
 namespace App\Services;
 
 use App\Repositories\UserRepository;
-use Illuminate\Support\Facades\Hash;
 
-class UserService extends BaseService {
+class UserService extends BaseService{
 
-    protected $userRepository;
+    protected $UserRepository;
 
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserRepository $UserRepository)
     {
-        parent::__construct($userRepository);
-        $this->userRepository=$userRepository;
+        parent::__construct($UserRepository);
+        $this->UserRepository=$UserRepository;
     }
-    public function create($request){
-        $attributes=$request->only('firstname','lastname','email','password');
-        $attributes['password']=Hash::make($attributes['password']);
-        return $this->save($request->merge($attributes));
-    }
-    public function updateUser($request,$id){
-        $attributes=$request->only('firstname','lastname','email','password');
-        $attributes['password']=Hash::make($attributes['password']);
-        return $this->update($request->merge($attributes),$id);
-    }
-
-    public function getAllUsersIncludingDeleted()
-    {
-        return $this->userRepository->withTrashed()->get();
-    }
-    public function getDeletedUsers()
-    {
-        return $this->userRepository->onlyTrashed()->get();
-    }
-
 
 }

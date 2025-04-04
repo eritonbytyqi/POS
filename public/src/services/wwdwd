@@ -1,0 +1,121 @@
+import { get } from '@/composable/useApi';
+import axios from 'axios'; // Importoni axios për të bërë kërkesa HTTP
+
+const API_URL = 'http://127.0.0.1:8000/api'; // Vendosni URL-në e API-së tuaj
+
+// Funksioni për të marrë të gjithë folderat
+export const getFolders = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/folders/main`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching folders:', error);
+    throw error;
+  }
+};
+export const fetchFolderProducts = async (folderId) => {
+  try {
+    const response = await axios.get(`${API_URL}/folders/${folderId}/products`);
+    return response.data || [];
+  } catch (error) {
+    console.error('Gabim gjatë marrjes së produkteve të folderit:', error);
+    return [];
+  }
+};
+
+export const fetchProducts = async (folderId, subfolderId) => {
+  try {
+    const response = await axios.get(`${API_URL}/folders/${folderId}/subfolders/${subfolderId}/products`);
+    return response.data || [];
+  } catch (error) {
+    console.error('Gabim gjatë marrjes së produkteve të subfolderit:', error);
+    return [];
+  }
+};
+
+// Funksioni për të krijuar një folder të ri
+
+
+// Example of how the data should look when you make the API request
+export const storeFolder = async (folderName) => {
+  try {
+    const response = await axios.post(`${API_URL}/folders`, {
+      name: folderName, // Make sure 'name' is passed
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error creating folder:', error);
+    throw error;
+  }
+};
+
+// Funksioni për të krijuar një nënfolder
+
+export const storeSubfolder = async (folderId, subfolderName) => {
+    try {
+      const response = await axios.post(`${API_URL}/folders/add/${folderId}/subfolders`, { name: subfolderName });
+      return response.data;
+    } catch (error) {
+      console.error('Error creating subfolder:', error);
+      throw error;
+    }
+};
+export const getSubfolders = async (folderId) => {
+  try {
+    const response = await axios.get(`${API_URL}/folders/${folderId}/subfolders`);
+    return response.data || [];
+  } catch (error) {
+    console.error('Gabim gjatë marrjes së subfolderave:', error);
+    return [];
+  }
+};
+export const updateSubfolder = async (subfolderId, newName) => {
+  try {
+    const response = await axios.put(`${API_URL}/subfolders/${subfolderId}`, { name: newName });
+    return response.data;
+  } catch (error) {
+    console.error('Gabim gjatë përditësimit të subfolderit:', error);
+    return null;
+  }
+};
+export const updateFolder = async (folderId, newName) => {
+  try {
+    const response = await axios.put(`${API_URL}/subfolders/${folderId}`, { name: newName });
+    return response.data;
+  } catch (error) {
+    console.error('Gabim gjatë përditësimit të subfolderit:', error);
+    return null;
+  }
+};
+
+
+export const deleteFolder = async (folderId) => {
+  try {
+    const response = await destroy(`${API_URL}/folders/${folderId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Gabim gjatë përditësimit të subfolderit:', error);
+    return null;
+  }
+};
+// Funksioni për të shtuar një produkt në një folder
+export const addProductToFolder = async (folderId, productId) => {
+  try {
+    // Dërgojmë kërkesën për të lidhur produktin me folderin
+    const response = await axios.post(`${API_URL}/folders/${folderId}/products`, { productId });
+    return response.data; // Kthejmë të dhënat për produktin e shtuar në folder
+  } catch (error) {
+    console.error('Error adding product to folder:', error);
+    throw error;
+  }
+};
+export const addProductToSubfolder = async (folderId, subfolderId, productId) => {
+  try {
+    // Dërgojmë kërkesën për të lidhur produktin me subfolderin
+    const response = await axios.post(`${API_URL}/folders/${folderId}/subfolders/${subfolderId}/products`, { productId });
+    return response.data; // Kthejmë të dhënat për produktin e shtuar në subfolder
+  } catch (error) {
+    console.error('Error adding product to subfolder:', error);
+    throw error;
+  }
+};
